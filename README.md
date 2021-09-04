@@ -84,16 +84,18 @@ pygame 뿐만 아니라 다른 프로그램에서도 시간 계산을 할 때는
 `if`문에서 `timer` 가 아닌 `total_time - elapsed_time`을 사용하는 이유?
 * `timer`는 `render` 함수로 화면에 새겨진 문자열 형태기 때문에 int 값과 호환되지 않음
 
-# QUIZ)
+<br>
+
+# **QUIZ)**
 하늘에서 떨어지는 똥 피하기 게임 만들기
 
 <br>
 
 [게임 조건]  
 ✅ 1. 캐릭터는 화면 가장 아래 중앙에 위치, 좌우로만 이동 가능  
-⬜ 2. 똥은 화면 가장 위에서 떨어짐. x 좌표는 매번 랜덤으로 설정  
-⬜ 3. 캐릭터가 똥을 피하면 다음 똥이 다시 떨어짐  
-⬜ 4. 캐릭터가 똥과 충돌하면 게임 종료  
+✅ 2. 똥은 화면 가장 위에서 떨어짐. x 좌표는 매번 랜덤으로 설정  
+✅ 3. 캐릭터가 똥을 피하면 다음 똥이 다시 떨어짐  
+✅ 4. 캐릭터가 똥과 충돌하면 게임 종료  
 ✅ 5. FPS 는 60 으로 고정
 
 <br>
@@ -101,4 +103,68 @@ pygame 뿐만 아니라 다른 프로그램에서도 시간 계산을 할 때는
 [게임 이미지]  
 ✅ 1. 배경 : 640 * 480 (세로 가로) - background.png  
 ✅ 2. 캐릭터 : 70 * 70 - character.png  
-✅ 3. 똥 : 70 * 70 - enemy.png  
+✅ 3. 똥 : 70 * 70 - enemy.png
+
+<br>
+
+# **Project) 오락실 PANG 게임 제작**
+
+[게임 조건]
+1. 캐릭터는 화면 하단 중앙에 위치, 좌우로만 이동 가능
+2. 스페이스를 누르면 무기를 쏘아 올림
+3. 큰 공 1개가 나타나서 바운스
+4. 무기에 닿으면 공은 작은 크기 2개로 분할, 가장 작은 크기의 공은 사라짐
+5. 모든 공을 없애면 게임 종료 (성공)
+6. 캐릭터는 공에 닿으면 게임 종료 (실패)
+7. 시간 제한 99초 초과 시 게임 종료 (실패)
+8. FPS 는 30 으로 고정 (필요시 speed 값을 조정)
+
+[게임 이미지]
+1. 배경 : 640 * 480(가로 세로) - background.png
+2. 무대 : 640 * 50 - stage.png
+3. 캐릭터 : 33 * 60 - character.png
+4. 무기 : 20 * 430 - weapon.png
+5. 공 : 160 * 160, 80 * 80, 40 * 40, 20 * 20 - balloon1.png ~ balloon4.png
+
+<br>
+
+# **2_ weapon_keyevent**
+```python
+    # 발사체 y축 상승
+    weapons = [ [w[0], w[1] - weapon_speed] for w in weapons]
+
+    # 발사체 화면 최상단 도달 시 소멸
+    weapons = [ [w[0], w[1]] for w in weapons if w[1] > 0]
+```
+하나의 `weapon` 발사체의 x축 `w[0]` 은 그대로 유지하고, y축 `w[1]` 에는 `weapon_speed` 를 빼주어 발사체가 상승하는 이미지를 연출
+
+화면 y축의 0(최상단) 보다 큰 값의 weapon 만 나타내는 코드를 작성하여 0에 도달했을 때 발사체가 사라지는 이미지를 연출
+
+<br>
+
+```python
+    screen.blit(background, (0, 0))
+
+    for weapon_x_pos, weapon_y_pos in weapons: # weapons 리스트에 x,y 좌표를 받음
+        screen.blit(weapon, (weapon_x_pos, weapon_y_pos))
+        
+    screen.blit(stage, (0, screen_height - stage_height))
+    screen.blit(character, (character_x_pos, character_y_pos))
+```
+`blit` 의 레이아웃은 먼저 입력된 순서대로 가장 아래에 배치되기 때문에 `weapons` 의 발사체가 스테이지나 캐릭터의 외관 위에 나타나지 않도록 배경 다음으로 배치
+
+<br>
+
+# **3_ ball_movement**
+`enumerate()` key 와 value 값을 불러오는 함수
+```python
+lst = ["A", "B", "C"]
+
+for lst_idx, lst_val in enumerate(lst):
+    print(lst_idx, lst_val)
+```
+```
+0 가
+1 나
+2 다
+```

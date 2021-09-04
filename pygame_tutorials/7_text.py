@@ -14,10 +14,10 @@ pygame.display.set_caption("PANG") # 게임 이름
 clock = pygame.time.Clock()
 
 # 배경 이미지 불러오기
-background = pygame.image.load("C:\\Users\\신건호\\Desktop\\PythonWorkspace\\pygame_PANG\\background.png")
+background = pygame.image.load("C:\\Users\\신건호\\Desktop\\PythonWorkspace\\pygame_PANG\\img\\background.png")
 
 # 캐릭터(스프라이트) 불러오기
-character = pygame.image.load("C:\\Users\\신건호\\Desktop\\PythonWorkspace\\pygame_PANG\\character.png")
+character = pygame.image.load("C:\\Users\\신건호\\Desktop\\PythonWorkspace\\pygame_PANG\\img\\character.png")
 character_size = character.get_rect().size # 이미지의 크기를 구해옴
 character_width = character_size[0] # 캐릭터의 가로 크기
 character_height = character_size[1] # 캐릭터의 세로 크기
@@ -32,7 +32,7 @@ to_y = 0
 character_speed = .6
 
 # 적 캐릭터 생성
-enemy = pygame.image.load("C:\\Users\\신건호\\Desktop\\PythonWorkspace\\pygame_PANG\\enemy.png")
+enemy = pygame.image.load("C:\\Users\\신건호\\Desktop\\PythonWorkspace\\pygame_PANG\\img\\enemy.png")
 enemy_size = enemy.get_rect().size
 enemy_width = enemy_size[0]
 enemy_height = enemy_size[1]
@@ -51,7 +51,7 @@ start_ticks = pygame.time.get_ticks() # 시작 tick 정보를 받아옴
 # 이벤트 루프
 running = True # 게임이 진행중인가?
 while running:
-    dt = clock.tick(60) # delta : 게임화면의 초당 프레임 수를 설정
+    dt = clock.tick(30) # delta : 게임화면의 초당 프레임 수를 설정
 
     print(f"fps : {clock.get_fps()}")
 
