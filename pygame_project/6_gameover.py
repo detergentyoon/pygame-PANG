@@ -20,7 +20,7 @@ current_path = os.path.dirname(__file__) # 현재 파일의 위치 반환
 image_path = os.path.join(current_path, "img") # img 폴더 위치 반환
 
 # 배경
-background = pygame.image.load(os.path.join(image_path, "background.png"))
+background = pygame.image.load(os.path.join(image_path, "background.jpg"))
 
 # 스테이지
 stage = pygame.image.load(os.path.join(image_path, "stage.png"))
@@ -86,7 +86,7 @@ game_result = "Game Over"
 
 running = True
 while running:
-    dt = clock.tick(60) # delta : 게임화면의 초당 프레임 수를 설정
+    dt = clock.tick(30) # delta : 게임화면의 초당 프레임 수를 설정
 
     # 2. 이벤트 처리 (키보드, 마우스 등)
     for event in pygame.event.get():
@@ -216,6 +216,9 @@ while running:
                         "to_y" : -6, # y축 이동방향
                         "init_spd_y": ball_speed_y[ball_img_idx + 1]}) # y 최초 속도
                 break
+        else: # 계속 게임을 진행
+            continue # 안쪽 for 문의 조건이 맞지 않으면 continue. 바깥 for 문 계속 수행
+        break # 안쪽 for 문에서 break 를 만나면 여기로 진입 가능. 2중 for 문 한 번에 탈출
 
     # 충돌된 공 or 무기 없애기
     if ball_to_remove > -1:

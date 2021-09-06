@@ -114,9 +114,9 @@ pygame 뿐만 아니라 다른 프로그램에서도 시간 계산을 할 때는
 ✅ 2. 스페이스를 누르면 무기를 쏘아 올림
 ✅ 3. 큰 공 1개가 나타나서 바운스
 ✅ 4. 무기에 닿으면 공은 작은 크기 2개로 분할, 가장 작은 크기의 공은 사라짐
-5. 모든 공을 없애면 게임 종료 (성공)
-6. 캐릭터는 공에 닿으면 게임 종료 (실패)
-7. 시간 제한 99초 초과 시 게임 종료 (실패)
+✅ 5. 모든 공을 없애면 게임 종료 (성공)
+✅ 6. 캐릭터는 공에 닿으면 게임 종료 (실패)
+✅ 7. 시간 제한 99초 초과 시 게임 종료 (실패)
 ✅ 8. FPS 는 30 으로 고정 (필요시 speed 값을 조정)
 
 [게임 이미지]
@@ -188,14 +188,41 @@ y축은 위에서 아래로 `screen.blit` 이 적용되기 때문에 최상단(0
 # **5_ ball_division**
 ### 튕겨나가는 다음 단계의 공 위치 설정
 ```python
-                balls.append({
-                    "pos_x" : ball_pos_x + (ball_width / 2) - (small_ball_width / 2), # 공 x 좌표
-                    "pos_y" : ball_pos_y + (ball_height / 2) - (small_ball_height / 2), # 공 y 좌표
+balls.append({
+    "pos_x" : ball_pos_x + (ball_width / 2) - (small_ball_width / 2), # 공 x 좌표
+    "pos_y" : ball_pos_y + (ball_height / 2) - (small_ball_height / 2), # 공 y 좌표
 ```
-1단계 공의 중앙 위치 `ball_pos_x - (ball_width / 2)`  
-좌우 2갈래로 나뉘어지는 위치 중 왼쪽의 경우 `- (small_ball_width)`  
-좌우 2갈래로 나뉘어지는 위치 중 오른쪽의 경우 `+ (small_ball_width)`  
+현 단계 공의 현 위치 `ball_pos_x` 에서 `ball_width / 2` 를 연산하여 정 생성 시작 x 좌표를 중앙에 위치시키고, 두 갈래로 나뉘어지는 공의 자연스러운 갈라짐 효과를 위해 두 개 공 사이의 거리를 이격시킴
+
+좌우 2갈래로 나뉘어지는 위치 `- (small_ball_width / 2)`  
 
 <br>
 
 ![nextIndexBallPos](pygame_project\img\nextIndexBallPos.png)
+
+<br>
+
+# **6_ gamemover**
+### 근접상태에서 공 파괴 시 다음 단계 공 비정상적 생성 디버깅
+![preBallDelBug](pygame_project\img\preBallDelBug.png)
+위 사진과 같은 공의 비정상적 생성 버그는 `ball` 과 `weapon` 의 충돌 처리를 하는 2중 `for`문 과정에서 바깥 `for`문을 코드 상에서 제대로 탈출하지 못했기 때문에 이전 단계의 공이 다시 생성되는 버그임.
+
+아래의 코드에서 `for`문에 `else` 를 사용함으로써 2중 `for`문을 탈출하는 트릭을 이용함.
+```python
+# 충돌 처리 2중 for문 버그 디버깅
+
+for ball_idx, ball_val in enumerate(balls):
+    ...
+    # 공과 무기들 충돌 처리
+    for weapon_idx, weapon_val in enumerate(weapons):
+        ...
+        # 충돌 체크
+        if weapon_rect.colliderect(ball_rect):
+            ...
+            if ball_img_idx < 3:
+                ...
+            break # 안쪽 for문 탈출
+    else: # 계속 게임을 진행 (for 문의 else)
+        continue # 안쪽 for 문의 조건이 맞지 않으면 continue. 바깥for 문 계속 수행
+    break # 안쪽 for 문에서 break 를 만나면 여기로 진입 가능. 2중for 문 한 번에 탈출
+```
